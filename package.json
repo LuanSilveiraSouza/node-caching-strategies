@@ -1,0 +1,27 @@
+{
+  "name": "node-caching-strategies",
+  "version": "1.0.0",
+  "description": "Caching Strategies implemented in a Node API",
+  "main": "index.js",
+  "scripts": {
+    "prod": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LuanSilveiraSouza/node-caching-strategies.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LuanSilveiraSouza/node-caching-strategies/issues"
+  },
+  "homepage": "https://github.com/LuanSilveiraSouza/node-caching-strategies#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
