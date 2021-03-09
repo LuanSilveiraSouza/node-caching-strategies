@@ -6,8 +6,6 @@ COPY package*.json ./
 
 RUN npm i
 
-COPY . .
+COPY . /usr/app
 
 EXPOSE $PORT
-
-CMD npm run dev

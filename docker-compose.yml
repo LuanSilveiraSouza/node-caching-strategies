@@ -11,6 +11,13 @@ services:
     networks:
       - webnet
 
+  pg:
+    image: postgres:alpine
+    environment:
+      POSTGRES_PASSWORD: postgres
+    networks:
+      - webnet
+
   app:
     build: .
     command: npm run dev
