@@ -14,7 +14,9 @@ services:
   pg:
     image: postgres:alpine
     environment:
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ${PG_NAME}
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASS} 
     networks:
       - webnet
 

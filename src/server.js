@@ -1,14 +1,10 @@
 'use strict';
 
-const express = require('express');
-const cors = require('cors');
+const app = require('./app');
+const { client, init } = require('./db/postgresConnection');
 
-const app = express();
+init();
 
-app.use(cors({ origin: '*' }));
-
-app.use('/', (req, res) => {
-	res.status(200).json({ msg: 'Hello World!' });
-});
+app.locals.db = client;
 
 app.listen(3030, () => console.log('Listening on port 3030'));
