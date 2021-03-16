@@ -1,10 +1,20 @@
 'use strict';
 
 const app = require('./app');
-const { pgClient, initPgClient } = require('./db/postgresConnection');
+const {
+	pgClient,
+	migrateUp,
+	seed,
+    migrateDown,
+} = require('./db/postgresConnection');
 
-initPgClient();
+(async function () {
+	await pgClient.connect();
+    await migrateDown();
+	await migrateUp();
+	await seed();
 
-app.locals.db = pgClient;
+	app.locals.db = pgClient;
 
-app.listen(3030, () => console.log('Listening on port 3030'));
+	app.listen(3030, () => console.log('Listening on port 3030'));
+})();
