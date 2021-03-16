@@ -18,9 +18,7 @@ const migrateUp = async () => {
 			age INT
 		);`
 	);
-	await pgClient.query(
-		`TRUNCATE TABLE users;`
-	);
+	await pgClient.query(`TRUNCATE TABLE users;`);
 };
 
 const migrateDown = async () => {
@@ -31,7 +29,8 @@ const seed = async () => {
 	for (let i = 0; i < 1000; i++) {
 		const user = new User(
 			faker.name.findName(),
-			new Date().getFullYear() - faker.date.past().getFullYear()
+			new Date().getFullYear() -
+				faker.date.between(new Date('1910'), new Date()).getFullYear()
 		);
 
 		await user.save(pgClient);

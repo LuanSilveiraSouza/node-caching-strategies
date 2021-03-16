@@ -21,7 +21,7 @@ class User {
 
 		if (dbClient) {
 			const query = await dbClient.query(`SELECT * FROM users;`);
-			results = query.rows[0];
+			results = query.rows;
 		}
 
 		return results;

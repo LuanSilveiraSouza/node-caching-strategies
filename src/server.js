@@ -10,7 +10,6 @@ const {
 
 (async function () {
 	await pgClient.connect();
-    await migrateDown();
 	await migrateUp();
 	await seed();
 

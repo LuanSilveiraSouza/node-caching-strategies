@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const faker = require('faker');
 const User = require('./domain/User');
 
 const router = Router();
