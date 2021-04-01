@@ -25,6 +25,7 @@ services:
     command: npm run dev
     depends_on:
       - redis
+      - pg
     env_file: ./.env
     ports:
       - ${PORT}:${PORT}
