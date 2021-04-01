@@ -1,12 +1,14 @@
 const { performance, PerformanceObserver } = require('perf_hooks');
 const { Router } = require('express');
-const { pgClient } = require('./db/postgresConnection');
+const { pgClient, seed } = require('./db/postgresConnection');
 const { getAsync, setAsync, getKeysAsync } = require('./db/redisConnection');
 const User = require('./domain/User');
 
 const router = Router();
 
-router.use('/', async (req, res) => {
+router.get('/', async (req, res) => {
+	const { cache } = req.query;
+
 	let benchmark;
 
 	const perfObserver = new PerformanceObserver((items) => {
@@ -14,24 +16,63 @@ router.use('/', async (req, res) => {
 	});
 	perfObserver.observe({ entryTypes: ['measure'], buffer: true });
 
-	performance.mark('database_process_start');
+	let users;
+	let metadata;
 
-	const users = await User.getAll(pgClient);
+	if (cache == 'true') {
+		performance.mark('redis_process_start');
 
-	performance.mark('database_process_end');
+		users = JSON.parse(await getAsync('users'));
 
-	performance.measure(
-		'database_process',
-		'database_process_start',
-		'database_process_end'
-	);
+		performance.mark('redis_process_end');
+
+		performance.measure(
+			'redis_process',
+			'redis_process_start',
+			'redis_process_end'
+		);
+
+		metadata = {
+			process: 'Redis Cache',
+			benchmark: benchmark,
+		};
+	}
+
+	console.log(users);
+
+	if (!users) {
+		performance.mark('postgres_process_start');
+
+		users = await User.getAll(pgClient);
+
+		performance.mark('postgres_process_end');
+
+		performance.measure(
+			'postgres_process',
+			'postgres_process_start',
+			'postgres_process_end'
+		);
+
+		await setAsync('users', JSON.stringify(users));
+
+		metadata = {
+			process: 'Postgres Database',
+			details: ['Added results in redis cache'],
+			benchmark: benchmark,
+		};
+	}
 
 	res.status(200).json({
 		results: users || [],
-		metadata: {
-			process: 'Postgres Database',
-			benchmark: benchmark,
-		},
+		metadata,
+	});
+});
+
+router.get('/seed', async (req, res) => {
+	await seed();
+
+	res.status(200).json({
+		msg: 'Users seeded in postgres',
 	});
 });
 
